@@ -1,0 +1,13 @@
+.env
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+node_modules/
+vendor/
+.DS_Store
+Thumbs.db
+/api/storage/logs/*.log
+/api/bootstrap/cache/*.php
+/api/public/hot
+/api/public/storage
+/web/dist/

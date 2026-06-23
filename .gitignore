@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+node_modules/
+vendor/
+dist/
+build/
+storage/*.key
+database/*.sqlite
+*.log
+.DS_Store
+work/
+outputs/

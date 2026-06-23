@@ -2,52 +2,70 @@
 
 ## Overview
 
-The system is a split Laravel API and React client.
+The system consists of a Laravel backend API and a React frontend.
 
-```mermaid
-flowchart LR
-    React["React + Vite Kanban UI"] --> API["Laravel API"]
-    API --> DB["SQLite local / Postgres Render"]
-    React --> AgentAPI["/api/agent/events"]
-    AgentAPI --> Hermes["Hermes"]
-    AgentAPI --> OpenClaw["OpenClaw"]
-    AgentAPI --> Slack["Slack #sprint-main #agent-coder #agent-log"]
-    Hermes --> Gemini["google/gemini-2.5-flash"]
-    OpenClaw --> Gemini
+```text
+React Frontend
+       |
+       v
+Laravel API
+       |
+       v
+Database
+```
+
+Optional integrations:
+
+```text
+React
+  |
+  +--> Laravel API
+           |
+           +--> Hermes
+           +--> OpenClaw
+           +--> Slack
+           +--> Gemini
 ```
 
 ## Backend
 
-Laravel owns persistence and API validation.
+* Laravel 12 REST API
+* Board model
+* Task model
+* CRUD endpoints
+* Task status updates
+* Validation and testing
 
-- `Board` has many `Task` records.
-- `Task` belongs to `Board`.
-- Task statuses are constrained to `todo`, `in_progress`, and `done`.
-- Feature tests cover CRUD, task movement, validation, and agent event acceptance.
+Task statuses:
+
+* todo
+* in_progress
+* done
 
 ## Frontend
 
-React owns the Kanban interaction model.
+* React + Vite
+* Kanban board
+* Drag and drop
+* Create/Edit/Delete tasks
+* API integration
 
-- `Navbar` shows agent sync state and refresh.
-- `Board` surface contains the three workflow columns.
-- `Column` is a droppable status lane.
-- `TaskCard` is draggable and editable.
-- `TaskModal` creates and edits tasks.
+## Deployment
 
-Drag-and-drop is powered by `@dnd-kit`. Icons use `lucide-react`.
+Backend:
+
+* Render
+
+Frontend:
+
+* Vercel
 
 ## Agent Integration
 
-The app does not reconfigure Slack, Hermes, OpenClaw, or Gemini. It emits workflow events to the existing layer through `POST /api/agent/events`.
+The application can optionally forward task events to:
 
-Payloads include:
+* Hermes
+* OpenClaw
+* Slack
 
-- event name, such as `task.moved`
-- task id/title/status
-- board id/name
-- human-readable message
-- model marker: `google/gemini-2.5-flash`
-- Slack channels: `sprint-main`, `agent-coder`, `agent-log`
-
-If webhook URLs are absent, the backend logs the event and returns a successful queued response so local product use is not blocked by agent credentials.
+through webhook configuration.
